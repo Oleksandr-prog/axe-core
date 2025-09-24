@@ -984,6 +984,10 @@
       "pass": "Document has a non-empty <title> element",
       "fail": "Document does not have a non-empty <title> element"
     },
+    "error-occurred": {
+      "pass": "",
+      "incomplete": "Axe encountered an error; test the page for this type of problem manually"
+    },
     "exists": {
       "pass": "Element does not exist",
       "incomplete": "Element exists"

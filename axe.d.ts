@@ -155,7 +155,7 @@ declare namespace axe {
     toolOptions: RunOptions;
     passes: Result[];
     violations: Result[];
-    incomplete: Result[];
+    incomplete: IncompleteResult[];
     inapplicable: Result[];
   }
   interface Result {
@@ -166,6 +166,9 @@ declare namespace axe {
     impact?: ImpactValue;
     tags: TagValue[];
     nodes: NodeResult[];
+  }
+  interface IncompleteResult extends Result {
+    error?: Omit<SupportError, 'errorNode'>;
   }
   interface NodeResult {
     html: string;
@@ -203,6 +206,21 @@ declare namespace axe {
     pass: string | { [key: string]: string };
     fail: string | { [key: string]: string };
     incomplete?: string | { [key: string]: string };
+  }
+  interface SupportError {
+    name: string;
+    message: string;
+    stack: string;
+    ruleId?: string;
+    method?: string;
+    cause?: SerialError;
+    errorNode?: DqElement;
+  }
+  interface SerialError {
+    message: string;
+    stack: string;
+    name: string;
+    cause?: SerialError;
   }
   interface CheckLocale {
     [key: string]: CheckMessages;
@@ -461,7 +479,13 @@ declare namespace axe {
     isLabelledShadowDomSelector: (
       selector: unknown
     ) => selector is LabelledShadowDomSelector;
-
+    SupportError: (
+      error: Error,
+      ruleId?: string,
+      method?: string,
+      errorNode?: DqElement
+    ) => SupportError;
+    serializeError: (error: Error) => SerialError;
     DqElement: DqElementConstructor;
     uuid: (
       options?: { random?: Uint8Array | Array<number> },
